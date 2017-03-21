@@ -1,6 +1,6 @@
 .vscode/
 .vscodeignore
-tests/
+test/
 src/
 typings/
 dist/testPrinter.*

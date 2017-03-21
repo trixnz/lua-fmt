@@ -1,7 +1,21 @@
 {
   "name": "lua-fmt",
-  "version": "1.0.0",
+  "version": "2.0.1",
   "description": "Format Lua code",
+  "author": "trixnz",
+  "homepage": "https://github.com/trixnz/lua-fmt",
+  "bugs": "https://github.com/trixnz/lua-fmt/issues",
+  "license": "MIT",
+  "keywords": [
+    "lua",
+    "format",
+    "lua-fmt",
+    "formatter"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "trixnz/lua-fmt"
+  },
   "main": "dist/index",
   "typings": "dist/index",
   "watch": {
@@ -24,14 +38,6 @@
     "watch-and-run": "npm-watch",
     "test": "mocha"
   },
-  "keywords": [
-    "lua",
-    "format",
-    "lua-fmt",
-    "formatter"
-  ],
-  "author": "trixnz",
-  "license": "MIT",
   "devDependencies": {
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "0.0.30",
