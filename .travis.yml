@@ -8,8 +8,12 @@ node_js:
 
 before_install:
   - pip install --user hererocks
-  - hererocks env -l5.3
-  - source env/bin/activate
+  - mkdir lua-bins
+
+  - hererocks lua53-env -l5.3 # Install Lua 5.3
+  - ln -s $PWD/lua53-env/bin/lua lua-bins/lua53 # Link lua-bins/lua53 to the 5.3 binary
+
+  - export PATH=$PATH:$PWD/lua-bins # Expose the binary path to the PATH
 
 script:
 - npm install -g gulp
