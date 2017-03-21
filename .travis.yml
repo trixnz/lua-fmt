@@ -6,6 +6,12 @@ language: node_js
 node_js:
 - 6.3.1
 
+before_install:
+  - pip install --user hererocks
+  - hererocks lua53 -l5.3
+  - source env/bin/activate
+
 script:
 - npm install -g gulp
 - gulp
+- gulp test
