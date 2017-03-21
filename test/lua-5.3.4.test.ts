@@ -8,7 +8,7 @@ import * as luaparse from 'luaparse';
 
 function runLuaCode(code: string): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
-        const process = spawn('lua53.exe', ['-']);
+        const process = spawn('lua53', ['-']);
         try {
             process.stdin.write(code, 'utf-8');
             process.stdin.end();

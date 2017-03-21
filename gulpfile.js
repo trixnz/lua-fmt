@@ -31,6 +31,10 @@ gulp.task('tslint', function () {
         .pipe(tslint.report())
 });
 
+gulp.task('test', shell.task([
+    'npm test'
+]));
+
 // gulp.task('patch', ['default'], function () { return bumpVersion('patch'); })
 // gulp.task('minor', ['default'], function () { return bumpVersion('minor'); })
 // gulp.task('major', ['default'], function () { return bumpVersion('major'); })
