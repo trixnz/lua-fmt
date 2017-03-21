@@ -8,7 +8,7 @@ node_js:
 
 before_install:
   - pip install --user hererocks
-  - hererocks lua53 -l5.3
+  - hererocks env -l5.3
   - source env/bin/activate
 
 script:
