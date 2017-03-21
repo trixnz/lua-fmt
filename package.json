@@ -46,7 +46,6 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "gulp": "^3.9.1",
-    "gulp-concat": "^2.6.1",
     "gulp-shell": "^0.6.1",
     "gulp-tslint": "^7.1.0",
     "mocha": "^3.2.0",

@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var tslint = require('gulp-tslint');
 var shell = require('gulp-shell');
-var concat = require('gulp-concat');
 
 // var bump = require('gulp-bump')
 // var git = require('gulp-git');
@@ -30,12 +29,6 @@ gulp.task('tslint', function () {
             formatter: "verbose"
         }))
         .pipe(tslint.report())
-});
-
-gulp.task('scripts', function () {
-    return gulp.src(files.outFiles)
-        .pipe(concat('all.js'))
-        .pipe(gulp.dest('./dist/'));
 });
 
 // gulp.task('patch', ['default'], function () { return bumpVersion('patch'); })
