@@ -1,0 +1,62 @@
+{
+  "name": "lua-fmt",
+  "version": "1.0.0",
+  "description": "Format Lua code",
+  "main": "dist/index",
+  "typings": "dist/index",
+  "watch": {
+    "test-run": {
+      "patterns": [
+        "dist",
+        "test_files"
+      ],
+      "extensions": [
+        "js",
+        "lua"
+      ],
+      "quiet": true
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "test-run": "node dist/testPrinter.js",
+    "watch": "tsc -p . -w",
+    "watch-and-run": "npm-watch",
+    "test": "mocha"
+  },
+  "keywords": [
+    "lua",
+    "format",
+    "lua-fmt",
+    "formatter"
+  ],
+  "author": "trixnz",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chai": "^3.4.35",
+    "@types/chai-as-promised": "0.0.30",
+    "@types/mocha": "^2.2.40",
+    "@types/node": "^7.0.8",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-shell": "^0.6.1",
+    "gulp-tslint": "^7.1.0",
+    "mocha": "^3.2.0",
+    "npm-watch": "^0.1.8",
+    "raw-loader": "^0.5.1",
+    "source-map-support": "^0.4.11",
+    "ts-loader": "^2.0.1",
+    "ts-node": "^2.1.0",
+    "tslint": "^4.5.1",
+    "typescript": "^2.2.1",
+    "uglify-js": "mishoo/UglifyJS2#harmony",
+    "uglifyjs-webpack-plugin": "^0.3.0",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1"
+  },
+  "dependencies": {
+    "luaparse": "oxyc/luaparse#ac42a00ebf4020b8c9d3219e4b0f84bf7ce6e802"
+  }
+}
