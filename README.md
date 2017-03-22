@@ -9,10 +9,18 @@ While not implemented yet, the interface will be customizable to tailor the outp
 * `npm install lua-fmt`
 
 ## Usage
+### API
 ```TypeScript
 import {formatText} from 'lua-fmt';
 console.log(formatText('local hello = "Hello"; print(hello .. " world!")'))
 ```
+
+### Command Line
+Format a single file:
+* `luafmt test/lua-5.3.4-tests/calls.lua`
+
+Format a stream from `stdin`:
+* `cat test/lua-5.3.4-tests/calls.lua | luafmt --stdin`
 
 ## TODO
 - [ ] Add support for a `.luafmt` preferences file
