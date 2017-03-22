@@ -16,8 +16,11 @@
     "type": "git",
     "url": "trixnz/lua-fmt"
   },
-  "main": "dist/index",
-  "typings": "dist/index",
+  "main": "dist/src/index.js",
+  "bin": {
+    "luafmt": "dist/bin/luafmt.js"
+  },
+  "typings": "dist/src/index.js",
   "watch": {
     "test-run": {
       "patterns": [
@@ -62,6 +65,10 @@
     "webpack-dev-server": "^2.4.1"
   },
   "dependencies": {
+    "@types/commander": "^2.3.31",
+    "@types/get-stdin": "^5.0.0",
+    "commander": "^2.9.0",
+    "get-stdin": "^5.0.1",
     "luaparse": "oxyc/luaparse#ac42a00ebf4020b8c9d3219e4b0f84bf7ce6e802"
   }
 }

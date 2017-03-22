@@ -7,9 +7,11 @@ var shell = require('gulp-shell');
 // var tag_version = require('gulp-tag-version');
 
 var files = {
-    src: './src/**/*.ts',
-    outFiles: ['./dist/**/*.js', '!./dist/**/testPrinter.js']
-}
+    src: [
+        './src/**/*.ts',
+        './bin/**/*.ts'
+    ],
+};
 
 // function bumpVersion(ver) {
 //     return gulp.src(['./package.json'])
@@ -24,7 +26,7 @@ gulp.task('compile', shell.task([
 ]));
 
 gulp.task('tslint', function () {
-    return gulp.src([files.src])
+    return gulp.src(files.src)
         .pipe(tslint({
             formatter: "verbose"
         }))
