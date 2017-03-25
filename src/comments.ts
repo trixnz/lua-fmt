@@ -410,6 +410,15 @@ function handleExpressionBeginComments(precedingNode: luaparse.Node,
             }
             break;
 
+        case 'IfClause':
+            // If the comment would be assigned to the condition, but exists after it, then attach it to the IfClause.
+            if (precedingNode === enclosingNode.condition &&
+                comment.loc.start.column > precedingNode.loc.start.column) {
+                addDanglingStatementComment(enclosingNode, comment);
+                return true;
+            }
+            break;
+
         case 'IfStatement':
             if (precedingNode &&
                 (precedingNode.type === 'IfClause') ||
