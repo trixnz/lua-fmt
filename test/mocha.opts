@@ -1,3 +1,0 @@
--r ts-node/register
---require test/support/setup.js
-test/**/*.test.ts

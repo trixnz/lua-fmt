@@ -1,46 +1,8 @@
-import { expect } from 'chai';
 import { formatText } from '../src/index';
+import { readFileContents, runLuaCode } from './util';
 
-import { spawn } from 'child_process';
-import { readFile } from 'fs';
 import * as path from 'path';
 import * as luaparse from 'luaparse';
-
-function runLuaCode(code: string): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-        const process = spawn('lua53', ['-']);
-        try {
-            process.stdin.write(code, 'utf-8');
-            process.stdin.end();
-        } catch (e) {
-            reject(e);
-        }
-
-        process.stderr.on('data', (data: Buffer) => {
-            const str = data.toString();
-
-            return reject(new Error(str));
-        });
-
-        process.on('close', exitCode => {
-            if (exitCode === 0) {
-                resolve(true);
-            }
-        });
-    });
-}
-
-function readFileContents(path: string) {
-    return new Promise<string>((resolve, reject) => {
-        readFile(path, 'utf-8', (err, data) => {
-            if (err) {
-                return reject(err);
-            }
-
-            return resolve(data);
-        });
-    });
-}
 
 function readLuaTest(name: string) {
     const testPath = path.join(__dirname, 'lua-5.3.4-tests', name);
@@ -55,25 +17,25 @@ function parseLua(text: string) {
 }
 
 function generateLuaTest(name: string) {
-    specify(name + ' can still pass tests after being formatted', () => {
+    it(name + ' can still pass tests after being formatted', async () => {
         const bootstrap = '\
             _soft = true \
             _port = true \
             _nomsg = true\n';
 
-        const result = readLuaTest(name)
+        const result = await readLuaTest(name)
             .then(contents => bootstrap + contents)
             .then(contents => formatText(contents))
             .then(formatted => runLuaCode(formatted));
 
-        return expect(result).to.eventually.be.true;
+        return expect(result).toBe(true);
     });
 
-    specify(name + ' can still be parsed after being formatted', () => {
-        const result = readLuaTest(name)
+    it(name + ' can still be parsed after being formatted', async () => {
+        const result = await readLuaTest(name)
             .then(contents => parseLua(contents));
 
-        return expect(result).to.eventually.not.be.null;
+        return expect(result).not.toBeNull();
     });
 }
 
