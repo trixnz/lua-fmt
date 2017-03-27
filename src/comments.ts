@@ -419,6 +419,15 @@ function handleExpressionBeginComments(precedingNode: luaparse.Node,
             }
             break;
 
+        case 'ElseClause':
+            // If the comment has no preceding node but is enclosed by the ElseClause, then it must be a trailing
+            // statement comment
+            if (precedingNode == null) {
+                addDanglingStatementComment(enclosingNode, comment);
+                return true;
+            }
+            break;
+
         case 'IfStatement':
             if (precedingNode &&
                 (precedingNode.type === 'IfClause') ||
