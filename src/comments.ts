@@ -72,7 +72,8 @@ export function attachComments(ast: luaparse.Chunk, options: Options) {
             }
         } else {
             if (
-                handleExpressionBeginComments(precedingNode, enclosingNode, comment)
+                handleExpressionBeginComments(precedingNode, enclosingNode, comment) ||
+                handleDanglingIfStatementsWithNoBodies(precedingNode, enclosingNode, comment)
             ) {
                 // Handled
             }
@@ -425,6 +426,32 @@ function handleExpressionBeginComments(precedingNode: luaparse.Node,
             // statement comment
             if (precedingNode == null) {
                 addDanglingStatementComment(enclosingNode, comment);
+                return true;
+            }
+            break;
+    }
+
+    return false;
+}
+
+// Handle dangling comments on clauses within IfStatements that contain empty bodies. The logical place to put them
+// would otherwise be trailing comments of the clause itself, which is not correct.
+function handleDanglingIfStatementsWithNoBodies(precedingNode: luaparse.Node,
+    enclosingNode: luaparse.Node, comment: luaparse.Comment) {
+    if (!precedingNode || !enclosingNode) {
+        return false;
+    }
+
+    if (enclosingNode.type !== 'IfStatement') {
+        return false;
+    }
+
+    switch (precedingNode.type) {
+        case 'IfClause':
+        case 'ElseifClause':
+        case 'ElseClause':
+            if (precedingNode.body.length === 0) {
+                addDanglingStatementComment(precedingNode, comment);
                 return true;
             }
             break;
