@@ -1,0 +1,122 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`do.lua 1`] = `
+"do -- Dangling Begin DoStatement
+end -- Dangling End DoStatement
+
+-- leading DoStatement
+do -- Dangling Begin DoStatement
+    -- body DoStatement
+end -- Dangling End DoStatement
+-- trailing DoStatement
+
+-- leading DoStatement
+do -- Dangling Begin DoStatement
+end -- Dangling End DoStatement
+-- trailing DoStatement
+"
+`;
+
+exports[`for.lua 1`] = `
+"for i = 0, 1, 2 do -- dangling Begin ForNumericStatement
+end -- Dangling End ForNumericStatement
+
+-- leading ForNumericStatement
+for i = 0, 1, 2 do -- dangling Begin ForNumericStatement
+end -- Dangling End ForNumericStatement
+-- trailing ForNumericStatement
+
+-- leading ForNumericStatement
+for i = 0, 1, 2 do -- dangling Begin ForNumericStatement
+    --body ForNumericStatement
+end -- Dangling End ForNumericStatement
+-- trailing ForNumericStatement
+
+for i in pairs(v) do -- dangling Begin ForNumericStatement
+end -- Dangling End ForNumericStatement
+
+-- leading ForNumericStatement
+for i in pairs(v) do -- dangling Begin ForNumericStatement
+end -- Dangling End ForNumericStatement
+-- trailing ForNumericStatement
+
+-- leading ForNumericStatement
+for i in pairs(v) do -- dangling Begin ForNumericStatement
+    --body ForNumericStatement
+end -- Dangling End ForNumericStatement
+-- trailing ForNumericStatement
+"
+`;
+
+exports[`function.lua 1`] = `
+"function test() -- dangling Begin FunctionDeclaration
+end -- dangling FunctionDeclaration
+
+function test()
+    -- Function body
+end
+
+-- leading FunctionDeclaration
+function test() -- dangling Begin FunctionDeclaration
+    -- FunctionDeclaration body
+end -- dangling FunctionDeclaration
+-- trailing End FunctionDeclaration
+
+function test(arg) -- dangling Begin FunctionDeclaration
+end -- dangling FunctionDeclaration
+
+function test(arg)
+    -- Function body
+end
+
+-- leading FunctionDeclaration
+function test(arg) -- dangling Begin FunctionDeclaration
+    -- FunctionDeclaration body
+end -- dangling FunctionDeclaration
+-- trailing End FunctionDeclaration
+"
+`;
+
+exports[`if.lua 1`] = `
+"if 1 then -- dangling IfClause
+elseif 1 then -- dangling ElseIfClause
+else -- dangling ElseClause
+end -- dangling IfStatement
+
+-- leading IfClause
+if 1 then
+    -- leading ElseIfClause
+elseif 1 then
+    -- leading ElseClause
+else
+    -- trailing ElseClause
+end
+
+-- leading IfStatement
+if 1 --[[if 1]] then -- dangling IfClause
+    -- leading ElseIfClause
+elseif 1 --[[elseif 1]] then -- dangling ElseIfClause
+    -- leading ElseClause
+else -- dangling ElseClause
+    -- body ElseClause
+end -- dangling End IfStatement
+-- trailing IfStatement
+"
+`;
+
+exports[`repeat.lua 1`] = `
+"repeat -- Dangling Begin RepeatStatement
+until true -- Dangling End RepeatStatement
+
+-- leading RepeatStatement
+repeat -- Dangling Begin RepeatStatement
+until true -- Dangling End RepeatStatement
+-- trailing RepeatStatement
+
+-- leading RepeatStatement
+repeat -- Dangling Begin RepeatStatement
+    -- body RepeatStatement
+until true -- Dangling End RepeatStatement
+-- trailing RepeatStatement
+"
+`;
