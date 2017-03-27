@@ -428,17 +428,6 @@ function handleExpressionBeginComments(precedingNode: luaparse.Node,
                 return true;
             }
             break;
-
-        case 'IfStatement':
-            if (precedingNode &&
-                (precedingNode.type === 'IfClause') ||
-                (precedingNode.type === 'ElseifClause') ||
-                (precedingNode.type === 'ElseClause')
-            ) {
-                addDanglingStatementComment(precedingNode, comment);
-                return true;
-            }
-            break;
     }
 
     return false;
