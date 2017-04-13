@@ -2,6 +2,7 @@
 .vscodeignore
 test/
 src/
+bin/
 typings/
 dist/testPrinter.*
 .gitattributes
