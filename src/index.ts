@@ -1,4 +1,6 @@
-require('source-map-support').install();
+if (process.env.NODE_ENV === 'development') {
+    require('source-map-support').install();
+}
 
 import { attachComments } from './comments';
 import { buildDocFromAst } from './printer';
