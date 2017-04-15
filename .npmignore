@@ -12,3 +12,4 @@ tsconfig.json
 tslint.json
 test_files/
 ide/
+lua*-env/
