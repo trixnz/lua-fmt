@@ -19,3 +19,13 @@ script:
 - npm install -g gulp
 - gulp
 - gulp test
+
+deploy:
+  provider: npm
+  email: me@trix.nz
+  api_key:
+    secure: jDK0d3GY48OEtcuBKnGjv6VdZenWIYTwZSYPmNiPFpIN49HEBuGpwpgS1xNt2LfIUjLFHxcf1Rqrlm31qY00MeLMoOJkXmzT0sRmM2HeKiY3f+/SgvqW3KEcMEeEr32Pg3rUMtWBEh9Xd4PwysVUIyH7qfVa+YpzcKXdOzhg0Rr84sItjWl9DIPPKOER75Det/QofAF/RnfWpmPT83C2HxQ1CRI3jQlE4tn6Q+0UFrAAkc9jw/dInHgYDbZkF8u0SfVyrAYeXVwJBTIqWmBFaXm3uIe3rVL09iafOcdZMTAwVtxJCNCCsSv5GCB9npwxqCdfPiZOR9Xt/YwoASEa7fQgsdzew2yk4n7S/KjyMk9v1bZt8b2iSYFhHir4wKJQVqdVfkWGeellexso/hWR4QPLpsKIu82cdfKZ3iv/RNhofLFGJhNh4+mzc84Dv331yJm+GnI5yEKr7HLAv/QhLdGtBaeE4SmW5xY7p0XtSvU5C/LRBdDZX53fFtuOcpSL1tM2JQjxGSThjd5JOIBhrLSYhHnU0mqeRhjnfAJOfm5kTq2rOJQ//kwbTjOGuaQ5bEatl/onpVrhGW2dd0lqSpu+mVCYefGjiNJi7nlGTGRUHtZTAMvAY+ORE9jy9GUOpLBltWZX/Wn4vBx9niLqRZGFmlB0rbmm75OARQzyjuo=
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: trixnz/lua-fmt
