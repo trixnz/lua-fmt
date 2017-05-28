@@ -108,6 +108,10 @@ export function hasNewLine(text: string, idx: number, searchOptions: SearchOptio
     return endOfLineIdx !== nextLineIdx;
 }
 
+export function hasNewLineInRange(text: string, start: number, end: number) {
+    return text.substr(start, end - start).indexOf('\n') !== -1;
+}
+
 export function isPreviousLineEmpty(text: string, idx: number) {
     idx = skipSpaces(text, idx, { searchBackwards: true });
     idx = skipNewLine(text, idx, { searchBackwards: true });

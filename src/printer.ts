@@ -3,8 +3,8 @@ import { Doc, concat, join, indent, hardline, softline, group, line } from './do
 import { willBreak, propagateBreaks } from './docUtils';
 
 import { printComments, printDanglingComments, printDanglingStatementComments } from './comments';
-import { locEnd, isNextLineEmpty } from './util';
-import { Options } from './options';
+import { locEnd, isNextLineEmpty, hasNewLineInRange } from './util';
+import { Options, getStringQuotemark, getAlternativeStringQuotemark } from './options';
 
 import * as luaparse from 'luaparse';
 
@@ -46,6 +46,38 @@ function printDanglingStatementComment(path: FastPath) {
     if (!comments) { return ''; }
 
     return concat([printDanglingStatementComments(path), printDanglingComments(path)]);
+}
+
+function printStringLiteral(path: FastPath, options: Options): Doc {
+    const literal = path.getValue() as luaparse.StringLiteral;
+    if (literal.type !== 'StringLiteral') {
+        throw new Error('printStringLiteral: Expected StringLiteral, got ' + literal.type);
+    }
+
+    // Ignore raw string literals as they have no leading/trailing quotes.
+    if (literal.raw.startsWith('[[') || literal.raw.startsWith('[=')) {
+        return literal.raw;
+    }
+
+    // Strip off the leading and trailing quote characters from the raw string
+    const raw = literal.raw.slice(1, -1);
+
+    const quoteCharacter = getStringQuotemark(options);
+    const otherQuote = getAlternativeStringQuotemark(options);
+
+    const newString = raw.replace(/\\([\s\S])|(['"])/g, (match, escaped, quote) => {
+        if (escaped === otherQuote) {
+            return escaped;
+        }
+
+        if (quote === quoteCharacter) {
+            return '\\' + quote;
+        }
+
+        return match;
+    });
+
+    return quoteCharacter + newString + quoteCharacter;
 }
 
 function isLastStatement(path: FastPath) {
@@ -151,7 +183,9 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                 parts.push(join(', ', path.map(print, 'init')));
             }
 
-            return concat(parts);
+            return group(
+                concat(parts)
+            );
 
         case 'CallStatement':
             return path.call(print, 'expression');
@@ -167,11 +201,18 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                 parts.push(' ', path.call(print, 'identifier'));
             }
 
-            parts.push(
-                concat([
-                    '(',
-                    join(', ', path.map(print, 'parameters')),
-                    ')'])
+            parts.push(concat([
+                '(',
+                group(
+                    indent(
+                        concat([
+                            softline,
+                            join(concat([',', line]), path.map(print, 'parameters'))
+                        ])
+                    )
+                ),
+                ')'
+            ])
             );
 
             parts.push(printDanglingStatementComment(path));
@@ -240,7 +281,17 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
         // Clauses
         case 'IfClause':
             parts.push(concat([
-                'if ', path.call(print, 'condition'), ' then'
+                'if ',
+                group(
+                    concat([
+                        indent(concat([
+                            softline,
+                            path.call(print, 'condition')
+                        ])),
+                        softline
+                    ])
+                ),
+                ' then'
             ]));
 
             parts.push(printDanglingStatementComment(path));
@@ -253,7 +304,17 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
 
         case 'ElseifClause':
             parts.push(concat([
-                'elseif ', path.call(print, 'condition'), ' then'
+                'elseif ',
+                group(
+                    concat([
+                        indent(concat([
+                            softline,
+                            path.call(print, 'condition')
+                        ])),
+                        softline
+                    ])
+                ),
+                ' then'
             ]));
 
             parts.push(printDanglingStatementComment(path));
@@ -286,9 +347,7 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
             return node.raw;
 
         case 'StringLiteral':
-            // TODO: StringLiterals should be normalized to a single quote character. This could get messy as Lua
-            // supports an abnormally high number of string formats..
-            return node.raw;
+            return printStringLiteral(path, options);
 
         case 'VarargLiteral':
             return '...';
@@ -299,11 +358,25 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
         // Expressions
         case 'BinaryExpression':
         case 'LogicalExpression':
-            return concat([
-                path.call(print, 'left'),
-                ' ', node.operator, ' ',
+            const parent = path.getParent() as luaparse.Node;
+            const shouldGroup = parent.type !== node.type &&
+                node.left.type !== node.type &&
+                node.right.type !== node.type;
+
+            const right = concat([
+                node.operator,
+                line,
                 path.call(print, 'right')
             ]);
+
+            return group(
+                concat([
+                    path.call(print, 'left'),
+                    indent(concat([
+                        ' ', shouldGroup ? group(right) : right
+                    ]))
+                ])
+            );
 
         case 'UnaryExpression':
             parts.push(node.operator);
@@ -326,11 +399,23 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
         case 'IndexExpression':
             return concat([
                 path.call(print, 'base'),
-                '[', path.call(print, 'index'), ']'
+                '[',
+                group(
+                    concat([
+                        indent(concat([softline, path.call(print, 'index')])),
+                        softline
+                    ])
+                ),
+                ']'
             ]);
 
         case 'CallExpression':
             const printedCallExpressionArgs = path.map(print, 'arguments');
+
+            // TODO: We should implement prettier's conditionalGroup construct to try and fit the most appropriately
+            // fitting combination of argument layout. I.e: If all arguments but the last fit on the same line, and the
+            // last argument is a table, it would be beneficial to break on the table, rather than breaking the entire
+            // argument list.
 
             return concat([
                 path.call(print, 'base'),
@@ -371,10 +456,13 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
 
             path.forEach(childPath => {
                 fields.push(concat(separatorParts));
-                fields.push(print(childPath));
+                fields.push(group(print(childPath)));
 
                 separatorParts = [',', line];
             }, 'fields');
+
+            // If the user has placed their own linebreaks in the table, they probably want them to be preserved
+            const shouldBreak = hasNewLineInRange(options.sourceText, node.range[0], node.range[1]);
 
             return group(
                 concat([
@@ -384,7 +472,8 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                     ),
                     softline,
                     '}'
-                ])
+                ]),
+                shouldBreak
             );
 
         case 'TableKeyString':

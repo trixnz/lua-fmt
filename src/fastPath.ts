@@ -74,7 +74,7 @@ export class FastPath {
         const result: Doc[] = [];
         const origLength = this.stack.length;
 
-        this.stack.push(node);
+        this.stack.push(field, node);
 
         node.forEach((val, i) => {
             this.stack.push(i, val);
