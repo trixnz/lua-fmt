@@ -125,7 +125,14 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
             return 'break';
 
         case 'ReturnStatement':
-            return concat(['return ', join(', ', path.map(print, 'arguments'))]);
+            parts.push('return');
+
+            if (node.arguments.length > 0) {
+                parts.push(' ');
+                parts.push(join(', ', path.map(print, 'arguments')));
+            }
+
+            return concat(parts);
 
         case 'WhileStatement':
             parts.push('while ');
