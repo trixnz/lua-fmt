@@ -33,5 +33,11 @@ function foo()
         return
     end
 end
+
+function foo()
+    local a = true
+
+    print(a)
+end
 "
 `;
