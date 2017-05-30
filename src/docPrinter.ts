@@ -12,16 +12,22 @@ interface State {
     currentLineLength: number;
     mode: Mode;
     lineSuffixes: LineSuffix[];
+    renderedText: string;
 }
 
 export function printDocToString(doc: Doc, options: Options) {
-    return printDocToStringWithState(doc, {
+    const state = {
         options,
         indentation: 0,
         currentLineLength: 0,
         mode: Mode.Break,
-        lineSuffixes: []
-    });
+        lineSuffixes: [],
+        renderedText: ''
+    };
+
+    printDocToStringWithState(doc, state);
+
+    return state.renderedText;
 }
 
 function canFitOnSingleLine(doc: Doc, state: State): boolean {
@@ -43,14 +49,14 @@ function canFitOnSingleLine(doc: Doc, state: State): boolean {
             return doc.parts.every((part) => canFitOnSingleLine(part, state));
 
         case 'indent':
-            const newState = {
-                ...state,
-                indentation: state.indentation + doc.count
-            };
-            if (canFitOnSingleLine(doc.content, newState)) {
-                state.currentLineLength = newState.currentLineLength;
+            state.indentation += doc.count;
+
+            if (canFitOnSingleLine(doc.content, state)) {
+                state.indentation -= doc.count;
                 return true;
             }
+
+            state.indentation -= doc.count;
 
             return false;
 
@@ -84,19 +90,14 @@ function canFitOnSingleLine(doc: Doc, state: State): boolean {
 }
 
 function printDocToStringWithState(doc: Doc, state: State) {
-    let text = '';
-
     if (typeof (doc) === 'string') {
-        text += doc;
+        state.renderedText += doc;
         state.currentLineLength += doc.length;
     } else {
         switch (doc.type) {
             case 'concat':
                 for (const part of doc.parts) {
-                    const printedDoc = printDocToStringWithState(part, state);
-
-                    text += printedDoc;
-                    // state.currentLineLength += printedDoc.length;
+                    printDocToStringWithState(part, state);
                 }
                 break;
 
@@ -104,7 +105,7 @@ function printDocToStringWithState(doc: Doc, state: State) {
                 if (state.mode === Mode.Flat) {
                     if (!doc.hard) {
                         if (!doc.soft) {
-                            text += ' ';
+                            state.renderedText += ' ';
                             state.currentLineLength += 1;
                         }
 
@@ -119,22 +120,28 @@ function printDocToStringWithState(doc: Doc, state: State) {
                     state.lineSuffixes.length = 0;
 
                     for (const suffix of suffixes) {
-                        text += printDocToStringWithState(suffix.content, state);
+                        printDocToStringWithState(suffix.content, state);
                     }
                 }
 
-                text += '\n' + ' '.repeat(state.indentation);
+                // Strip trailing whitespace.. this is probably rather inefficient as the string will progressively get
+                // bigger and bigger..
+                if (state.renderedText.length > 0) {
+                    state.renderedText = state.renderedText.replace(
+                        /[^\S\n]*$/,
+                        ''
+                    );
+                }
+
+                state.renderedText += '\n' + ' '.repeat(state.indentation);
                 state.currentLineLength = state.indentation;
                 break;
 
             case 'indent':
                 {
-                    const newState = {
-                        ...state,
-                        indentation: state.indentation + doc.count
-                    };
-                    text += printDocToStringWithState(doc.content, newState);
-                    state.currentLineLength = newState.currentLineLength;
+                    state.indentation += doc.count;
+                    printDocToStringWithState(doc.content, state);
+                    state.indentation -= doc.count;
                     break;
                 }
 
@@ -143,26 +150,19 @@ function printDocToStringWithState(doc: Doc, state: State) {
                 break;
 
             case 'group':
-                let newState: State | null = null;
                 const canFit = canFitOnSingleLine(doc, { ...state, mode: Mode.Flat });
+                const oldMode = state.mode;
+
                 if (!doc.willBreak && canFit) {
-                    newState = {
-                        ...state,
-                        mode: Mode.Flat
-                    };
-                    text += printDocToStringWithState(doc.content, newState);
+                    state.mode = Mode.Flat;
                 } else {
-                    newState = {
-                        ...state,
-                        mode: Mode.Break
-                    };
-                    text += printDocToStringWithState(doc.content, newState);
+                    state.mode = Mode.Break;
                 }
 
-                state.currentLineLength = newState.currentLineLength;
+                printDocToStringWithState(doc.content, state);
+                state.mode = oldMode;
+
                 break;
         }
     }
-
-    return text;
 }
