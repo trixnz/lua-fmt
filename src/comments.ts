@@ -175,9 +175,7 @@ function printTrailingComment(path: FastPath, options: Options) {
     if (hasNewLine(options.sourceText, locStart(comment), { searchBackwards: true })) {
         const previousLineEmpty = isPreviousLineEmpty(options.sourceText, locStart(comment));
 
-        return lineSuffix(
-            concat([hardline, previousLineEmpty ? hardline : '', comment.raw])
-        );
+        return concat([hardline, previousLineEmpty ? hardline : '', comment.raw]);
     }
 
     if (comment.raw.startsWith('--[[')) {
