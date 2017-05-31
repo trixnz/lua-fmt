@@ -120,3 +120,24 @@ until true -- Dangling End RepeatStatement
 -- trailing RepeatStatement
 "
 `;
+
+exports[`table.lua 1`] = `
+"-- Simple example
+a = {
+    b = true
+    -- Trailing comment should be indented
+}
+
+-- Deep example
+film = {
+    scene = {
+        object = {
+            name = \\"Swallow\\",
+            carrying = \\"Coconut\\",
+            origin = \\"Africa\\"
+            -- velocity = ??,
+        }
+    }
+}
+"
+`;
