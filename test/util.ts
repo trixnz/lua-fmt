@@ -3,6 +3,7 @@ import { readFile, readFileSync, readdirSync } from 'fs';
 import * as path from 'path';
 
 import { formatText } from '../src/index';
+import { UserOptions } from '../src/options';
 
 export function runLuaCode(code: string): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
@@ -40,7 +41,7 @@ export function readFileContents(path: string) {
     });
 }
 
-export function runTest(dirName: string) {
+export function runTest(dirName: string, userOptions?: UserOptions) {
     test(path.basename(dirName), () => {
         readdirSync(dirName).forEach(fileName => {
             if (!fileName.endsWith('.lua')) {
@@ -49,7 +50,7 @@ export function runTest(dirName: string) {
 
             const filePath = path.join(dirName, fileName);
             const text = readFileSync(filePath, 'utf-8');
-            const formatted = formatText(text);
+            const formatted = formatText(text, userOptions);
 
             expect(formatted).toMatchSnapshot(fileName);
         });
