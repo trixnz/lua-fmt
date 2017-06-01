@@ -178,21 +178,40 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
 
         case 'LocalStatement':
         case 'AssignmentStatement':
-            if (node.type === 'LocalStatement') {
-                parts.push('local ');
+            {
+                const left = [];
+
+                if (node.type === 'LocalStatement') {
+                    left.push('local ');
+                }
+
+                left.push(join(', ', path.map(print, 'variables')));
+
+                const right = [];
+                if (node.init.length) {
+                    left.push(' =');
+
+                    right.push(
+                        join(', ', path.map(print, 'init'))
+                    );
+                }
+
+                // HACK: This definitely needs to be improved, as I'm sure TableConstructorExpression isn't the only
+                // candidate that falls under this critera.
+                //
+                // Due to the nature of how groups break, if the TableConstructorExpression contains a newline (and
+                // thusly breaks), the break will propagate all the way up to the group on the left of the assignment.
+                // This results in the table's initial { character being moved to a separate line.
+                //
+                // There's probably a much better way of doing this, but it works for now.
+                const canBreakLine = node.init.some(n => n != null && n.type !== 'TableConstructorExpression');
+
+                return group(
+                    concat([
+                        concat([group(concat(left)), canBreakLine ? indent(line) : ' ']),
+                        concat(right)
+                    ]));
             }
-
-            parts.push(join(', ', path.map(print, 'variables')));
-
-            if (node.init.length) {
-                parts.push(' = ');
-
-                parts.push(join(', ', path.map(print, 'init')));
-            }
-
-            return group(
-                concat(parts)
-            );
 
         case 'CallStatement':
             return path.call(print, 'expression');
