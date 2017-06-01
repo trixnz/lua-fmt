@@ -1,3 +1,3 @@
 import { runTest } from '../util';
 
-runTest(__dirname);
+runTest(__dirname, { lineWidth: 80 });
