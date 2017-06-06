@@ -11,7 +11,6 @@ export interface Line {
 
 export interface Indent {
     type: 'indent';
-    count: number;
     content: Doc;
 }
 
@@ -70,10 +69,9 @@ export const softline: Line = {
     soft: true
 };
 
-export function indent(content: Doc, count: number = 4): Indent {
+export function indent(content: Doc): Indent {
     return {
         type: 'indent',
-        count,
         content
     };
 }

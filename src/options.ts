@@ -3,6 +3,7 @@ export type Quotemark = 'single' | 'double';
 export interface Options {
     sourceText: string;
     lineWidth: number;
+    indentCount: number;
     quotemark: Quotemark;
 }
 
@@ -11,6 +12,7 @@ export type UserOptions = Partial<Options>;
 export const defaultOptions: Options = {
     sourceText: '',
     lineWidth: 120,
+    indentCount: 4,
     quotemark: 'double'
 };
 
