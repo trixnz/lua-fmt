@@ -4,7 +4,7 @@ import { willBreak, propagateBreaks } from './docUtils';
 
 import { printComments, printDanglingComments, printDanglingStatementComments } from './comments';
 import { locEnd, isNextLineEmpty, hasNewLineInRange } from './util';
-import { Options, getStringQuotemark, getAlternativeStringQuotemark } from './options';
+import { Options, getStringQuotemark, getAlternativeStringQuotemark, Quotemark } from './options';
 
 import * as luaparse from 'luaparse';
 
@@ -48,6 +48,25 @@ function printDanglingStatementComment(path: FastPath) {
     return concat([printDanglingStatementComments(path), printDanglingComments(path)]);
 }
 
+function makeStringLiteral(raw: string, quotemark: Quotemark) {
+    const preferredQuoteCharacter = getStringQuotemark(quotemark);
+    const alternativeQuoteCharacter = getAlternativeStringQuotemark(quotemark === 'single' ? 'single' : 'double');
+
+    const newString = raw.replace(/\\([\s\S])|(['"])/g, (match, escaped, quote) => {
+        if (escaped === alternativeQuoteCharacter) {
+            return escaped;
+        }
+
+        if (quote === preferredQuoteCharacter) {
+            return '\\' + quote;
+        }
+
+        return match;
+    });
+
+    return preferredQuoteCharacter + newString + preferredQuoteCharacter;
+}
+
 function printStringLiteral(path: FastPath, options: Options): Doc {
     const literal = path.getValue() as luaparse.StringLiteral;
     if (literal.type !== 'StringLiteral') {
@@ -62,22 +81,16 @@ function printStringLiteral(path: FastPath, options: Options): Doc {
     // Strip off the leading and trailing quote characters from the raw string
     const raw = literal.raw.slice(1, -1);
 
-    const quoteCharacter = getStringQuotemark(options);
-    const otherQuote = getAlternativeStringQuotemark(options);
+    let preferredQuotemark = options.quotemark;
+    const preferredQuoteCharacter = getStringQuotemark(preferredQuotemark);
 
-    const newString = raw.replace(/\\([\s\S])|(['"])/g, (match, escaped, quote) => {
-        if (escaped === otherQuote) {
-            return escaped;
-        }
+    // If the string literal already contains the preferred quote character, then use the alternative to improve
+    // potential readability issues.
+    if (raw.includes(preferredQuoteCharacter)) {
+        preferredQuotemark = preferredQuotemark === 'single' ? 'double' : 'single';
+    }
 
-        if (quote === quoteCharacter) {
-            return '\\' + quote;
-        }
-
-        return match;
-    });
-
-    return quoteCharacter + newString + quoteCharacter;
+    return makeStringLiteral(raw, preferredQuotemark);
 }
 
 function isLastStatement(path: FastPath) {
