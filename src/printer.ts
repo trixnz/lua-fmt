@@ -198,14 +198,23 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                     left.push('local ');
                 }
 
-                left.push(join(', ', path.map(print, 'variables')));
+                left.push(
+                    indent(
+                        join(
+                            concat([',', line]),
+                            path.map(print, 'variables')
+                        )
+                    )
+                );
+
+                let operator = '';
 
                 const right = [];
                 if (node.init.length) {
-                    left.push(' =');
+                    operator = ' =';
 
                     right.push(
-                        join(', ', path.map(print, 'init'))
+                        join(concat([',', line]), path.map(print, 'init'))
                     );
                 }
 
@@ -221,9 +230,15 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
 
                 return group(
                     concat([
-                        concat([group(concat(left)), canBreakLine ? indent(line) : ' ']),
-                        concat(right)
-                    ]));
+                        concat(left),
+                        group(
+                            concat([
+                                operator,
+                                canBreakLine ? indent(line) : ' ',
+                                concat(right)
+                            ]))
+                    ])
+                );
             }
 
         case 'CallStatement':

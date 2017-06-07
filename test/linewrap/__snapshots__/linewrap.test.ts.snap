@@ -16,5 +16,10 @@ print(
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,
     c
 )
+
+local a,
+    bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc =
+    foo()
 "
 `;
