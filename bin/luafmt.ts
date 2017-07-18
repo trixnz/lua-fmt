@@ -4,10 +4,10 @@ const pkg = require('../../package.json');
 
 import * as program from 'commander';
 import * as getStdin from 'get-stdin';
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 
-import { formatText } from '../src/index';
-import { UserOptions, defaultOptions } from '../src/options';
+import { formatText, producePatch } from '../src/index';
+import { UserOptions, defaultOptions, WriteMode } from '../src/options';
 
 function myParseInt(inputString: string, defaultValue: number) {
     const int = parseInt(inputString, 10);
@@ -19,13 +19,47 @@ function myParseInt(inputString: string, defaultValue: number) {
     return int;
 }
 
+function parseWriteMode(inputString: string, defaultValue: WriteMode) {
+    for (const key of Object.keys(WriteMode)) {
+        if (WriteMode[key] === inputString) { return inputString; }
+    }
+
+    return defaultValue;
+}
+
+function printFormattedDocument(filename: string, originalDocument: string, formattedDocument: string,
+    options: UserOptions) {
+    switch (options.writeMode) {
+        case 'stdout':
+            process.stdout.write(formattedDocument);
+            break;
+
+        case 'diff':
+            process.stdout.write(producePatch(filename, originalDocument, formattedDocument));
+            break;
+
+        case 'replace':
+            if (filename === '<stdin>') {
+                printError(filename, new Error('Write mode \'replace\' is incompatible with --stdin'));
+            }
+
+            try {
+                writeFileSync(filename, formattedDocument);
+            } catch (err) {
+                printError(filename, err);
+            }
+            break;
+    }
+}
+
 program
     .version(pkg.version)
     .usage('[options] [file]')
     .option('--stdin', 'Read code from stdin')
     .option('-l, --line-width <width>', 'Maximum length of a line before it will be wrapped',
     myParseInt, defaultOptions.lineWidth)
-    .option('-i, --indent-count <count>', 'Number of characters to indent', myParseInt, defaultOptions.indentCount);
+    .option('-i, --indent-count <count>', 'Number of characters to indent', myParseInt, defaultOptions.indentCount)
+    .option('-w, --write-mode <mode>', 'Mode for output', parseWriteMode, defaultOptions.writeMode);
 
 program.parse(process.argv);
 
@@ -41,12 +75,13 @@ function printError(filename: string, err: Error) {
 
 const customOptions: UserOptions = {
     lineWidth: program.lineWidth,
-    indentCount: program.indentCount
+    indentCount: program.indentCount,
+    writeMode: program.writeMode
 };
 
 if (program.stdin) {
     getStdin().then(input => {
-        process.stdout.write(formatText(input, customOptions));
+        printFormattedDocument('<stdin>', input, formatText(input, customOptions), customOptions);
     }).catch((err: Error) => {
         printError('<stdin>', err);
     });
@@ -69,7 +104,7 @@ if (program.stdin) {
     try {
         const formatted = formatText(input, customOptions);
 
-        process.stdout.write(formatted);
+        printFormattedDocument(filename, input, formatted, customOptions);
     } catch (err) {
         printError(filename, err);
     }

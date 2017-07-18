@@ -1,10 +1,16 @@
 export type Quotemark = 'single' | 'double';
+export enum WriteMode {
+    StdOut = 'stdout',
+    Replace = 'replace',
+    Diff = 'diff'
+}
 
 export interface Options {
     sourceText: string;
     lineWidth: number;
     indentCount: number;
     quotemark: Quotemark;
+    writeMode: WriteMode;
 }
 
 export type UserOptions = Partial<Options>;
@@ -13,7 +19,8 @@ export const defaultOptions: Options = {
     sourceText: '',
     lineWidth: 120,
     indentCount: 4,
-    quotemark: 'double'
+    quotemark: 'double',
+    writeMode: WriteMode.StdOut
 };
 
 /** Returns the quotation mark to use from the provided option. */

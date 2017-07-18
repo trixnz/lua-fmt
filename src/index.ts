@@ -8,6 +8,9 @@ import { printDocToString } from './docPrinter';
 import { UserOptions, defaultOptions } from './options';
 
 import { parse } from 'luaparse';
+import { createPatch } from 'diff';
+
+export { UserOptions, defaultOptions, WriteMode } from './options';
 
 export function formatText(text: string, userOptions?: UserOptions) {
     const ast = parse(text, {
@@ -34,4 +37,8 @@ export function formatText(text: string, userOptions?: UserOptions) {
     const formattedText = printDocToString(doc, options);
 
     return formattedText;
+}
+
+export function producePatch(filename: string, originalDocument: string, formattedDocument: string) {
+    return createPatch(filename, originalDocument, formattedDocument, 'original', 'formatted');
 }
