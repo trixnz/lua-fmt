@@ -36,7 +36,7 @@
   },
   "scripts": {
     "compile": "tsc -p .",
-    "test-run": "node dist/testPrinter.js",
+    "test-run": "node dist/src/testPrinter.js",
     "watch": "tsc -p . -w",
     "watch-and-run": "npm-watch",
     "test": "jest"
