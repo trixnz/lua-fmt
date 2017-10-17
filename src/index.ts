@@ -2,7 +2,7 @@ if (process.env.NODE_ENV === 'development') {
     require('source-map-support').install();
 }
 
-import { attachComments } from './comments';
+import { attachComments, injectShebang } from './comments';
 import { buildDocFromAst } from './printer';
 import { printDocToString } from './docPrinter';
 import { UserOptions, defaultOptions } from './options';
@@ -31,6 +31,7 @@ export function formatText(text: string, userOptions?: UserOptions) {
         sourceText: text
     };
 
+    injectShebang(ast, options);
     attachComments(ast, options);
 
     const doc = buildDocFromAst(ast, options);

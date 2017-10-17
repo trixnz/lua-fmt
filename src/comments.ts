@@ -93,6 +93,33 @@ export function attachComments(ast: luaparse.Chunk, options: Options) {
     }
 }
 
+export function injectShebang(ast: luaparse.Chunk, options: Options) {
+    if (!options.sourceText.startsWith('#!')) {
+        return;
+    }
+
+    const endLine = options.sourceText.indexOf('\n');
+    const raw = options.sourceText.slice(0, endLine);
+    const shebang = options.sourceText.slice(2, endLine);
+
+    ast.comments.push({
+        type: 'Comment',
+        loc: {
+            start: {
+                line: 1,
+                column: 0
+            },
+            end: {
+                line: 1,
+                column: endLine
+            }
+        },
+        range: [0, endLine],
+        raw,
+        value: shebang
+    });
+}
+
 export function printDanglingComments(path: FastPath, sameIndent: boolean = false): Doc {
     const node = path.getValue();
 
