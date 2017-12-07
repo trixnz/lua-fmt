@@ -49,14 +49,14 @@ function canFitOnSingleLine(doc: Doc, state: State): boolean {
             return doc.parts.every((part) => canFitOnSingleLine(part, state));
 
         case 'indent':
-            state.indentation += state.options.indentCount;
+            state.indentation++;
 
             if (canFitOnSingleLine(doc.content, state)) {
-                state.indentation -= state.options.indentCount;
+                state.indentation--;
                 return true;
             }
 
-            state.indentation -= state.options.indentCount;
+            state.indentation--;
 
             return false;
 
@@ -133,15 +133,19 @@ function printDocToStringWithState(doc: Doc, state: State) {
                     );
                 }
 
-                state.renderedText += '\n' + ' '.repeat(state.indentation);
-                state.currentLineLength = state.indentation;
+                const renderedIndentation = state.options.useTabs
+                    ? '\t'.repeat(state.indentation)
+                    : ' '.repeat(state.indentation * state.options.indentCount);
+
+                state.renderedText += '\n' + renderedIndentation;
+                state.currentLineLength = renderedIndentation.length;
                 break;
 
             case 'indent':
                 {
-                    state.indentation += state.options.indentCount;
+                    state.indentation++;
                     printDocToStringWithState(doc.content, state);
-                    state.indentation -= state.options.indentCount;
+                    state.indentation--;
                     break;
                 }
 

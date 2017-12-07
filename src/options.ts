@@ -9,6 +9,7 @@ export interface Options {
     sourceText: string;
     lineWidth: number;
     indentCount: number;
+    useTabs: boolean;
     quotemark: Quotemark;
     writeMode: WriteMode;
 }
@@ -19,6 +20,7 @@ export const defaultOptions: Options = {
     sourceText: '',
     lineWidth: 120,
     indentCount: 4,
+    useTabs: false,
     quotemark: 'double',
     writeMode: WriteMode.StdOut
 };

@@ -59,6 +59,7 @@ program
     .option('-l, --line-width <width>', 'Maximum length of a line before it will be wrapped',
     myParseInt, defaultOptions.lineWidth)
     .option('-i, --indent-count <count>', 'Number of characters to indent', myParseInt, defaultOptions.indentCount)
+    .option('--use-tabs', 'Use tabs instead of spaces for indentation')
     .option('-w, --write-mode <mode>', 'Mode for output', parseWriteMode, defaultOptions.writeMode);
 
 program.parse(process.argv);
@@ -76,6 +77,7 @@ function printError(filename: string, err: Error) {
 const customOptions: UserOptions = {
     lineWidth: program.lineWidth,
     indentCount: program.indentCount,
+    useTabs: program.useTabs,
     writeMode: program.writeMode
 };
 
