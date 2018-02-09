@@ -397,15 +397,6 @@ do
   assert(assert(load(c))() == 10)
 end
 
-local a, b, c, d, e, f = emptyFunction()
-
-local a, b, c, d, e, f = emptyFunction(), emptyFunction()
-
-local a, b, c, d, e, f = emptyFunction(), emptyFunction(), emptyFunction()
-
-local a, b, c, d, e, f = emptyFunction(), emptyFunction(function() return true end)
-
-local a, b, c, d, e, f = emptyFunction(function() return true end)
 
 print('OK')
 return deep

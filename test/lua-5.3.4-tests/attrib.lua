@@ -398,7 +398,7 @@ a[1], f(a)[2], b, c = {['alo']=assert}, 10, a[1], a[f], 6, 10, 23, f(a), 2
 a[1].alo(a[2]==10 and b==10 and c==print)
 
 
--- test of large float/integer indices 
+-- test of large float/integer indices
 
 -- compute maximum integer where all bits fit in a float
 local maxint = math.maxinteger
@@ -463,6 +463,33 @@ end
 
 local a, b = foo()()
 assert(a == 3 and b == 14)
+
+
+local a, b, c, d, e, f = emptyFunction()
+
+local a, b, c, d, e, f = emptyFunction(), emptyFunction()
+
+local a, b, c, d, e, f = emptyFunction(), emptyFunction(), emptyFunction()
+
+local a, b, c, d, e, f = emptyFunction(), emptyFunction(function() return true end)
+
+local a, b, c, d, e, f = emptyFunction(function() return true end)
+
+local function object()
+  local self = {}
+
+  function self:test()
+  end
+
+  self.test = function()
+  end
+
+  self.test = function()
+    -- Reaaaaally long comment, goes on forever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever
+  end
+
+  return self
+end
 
 print('OK')
 
