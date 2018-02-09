@@ -201,7 +201,10 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                 left.push(
                     indent(
                         join(
-                            concat([',', line]),
+                            concat([
+                                ',',
+                                options.indentMultipleAssignments ? line : ' '
+                            ]),
                             path.map(print, 'variables')
                         )
                     )
