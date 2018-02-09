@@ -213,9 +213,19 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                 if (node.init.length) {
                     operator = ' =';
 
-                    right.push(
-                        join(concat([',', line]), path.map(print, 'init'))
-                    );
+                    if (node.init.length > 1) {
+                        right.push(
+                            indent(
+                                join(
+                                    concat([',', line]), path.map(print, 'init')
+                                )
+                            )
+                        );
+                    } else {
+                        right.push(
+                            join(concat([',', line]), path.map(print, 'init'))
+                        );
+                    }
                 }
 
                 // HACK: This definitely needs to be improved, as I'm sure TableConstructorExpression isn't the only
