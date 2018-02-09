@@ -31,7 +31,7 @@ do    -- test error in 'print' too...
   _ENV.tostring = function () return {} end
   local st, msg = pcall(print, 1)
   assert(st == false and string.find(msg, "must return a string"))
-  
+
   _ENV.tostring = tostring
 end
 
@@ -396,6 +396,16 @@ do
   end
   assert(assert(load(c))() == 10)
 end
+
+local a, b, c, d, e, f = emptyFunction()
+
+local a, b, c, d, e, f = emptyFunction(), emptyFunction()
+
+local a, b, c, d, e, f = emptyFunction(), emptyFunction(), emptyFunction()
+
+local a, b, c, d, e, f = emptyFunction(), emptyFunction(function() return true end)
+
+local a, b, c, d, e, f = emptyFunction(function() return true end)
 
 print('OK')
 return deep
