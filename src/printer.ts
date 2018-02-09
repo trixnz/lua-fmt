@@ -203,7 +203,7 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                         join(
                             concat([
                                 ',',
-                                options.indentMultipleAssignments ? line : ' '
+                                options.formatMultipleAssignments ? line : ' '
                             ]),
                             path.map(print, 'variables')
                         )
