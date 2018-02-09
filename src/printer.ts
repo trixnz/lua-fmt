@@ -226,7 +226,11 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                 // This results in the table's initial { character being moved to a separate line.
                 //
                 // There's probably a much better way of doing this, but it works for now.
-                const canBreakLine = node.init.some(n => n != null && n.type !== 'TableConstructorExpression');
+                const canBreakLine = node.init.some(n =>
+                    n != null &&
+                    n.type !== 'TableConstructorExpression' &&
+                    n.type !== 'FunctionDeclaration'
+                );
 
                 return group(
                     concat([
