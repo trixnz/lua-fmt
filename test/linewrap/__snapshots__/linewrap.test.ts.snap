@@ -41,12 +41,7 @@ local a,
         end
     )
 
-local a,
-    b,
-    c,
-    d,
-    e,
-    f =
+local a, b, c, d, e, f =
     emptyFunction(
     function()
         return true
