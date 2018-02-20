@@ -20,3 +20,7 @@ function foo()
 
    print(a)
 end
+
+local ok, err = pcall(foo)
+
+local ok, err = pcall(function() end)

@@ -464,33 +464,6 @@ end
 local a, b = foo()()
 assert(a == 3 and b == 14)
 
-
-local a, b, c, d, e, f = emptyFunction()
-
-local a, b, c, d, e, f = emptyFunction(), emptyFunction()
-
-local a, b, c, d, e, f = emptyFunction(), emptyFunction(), emptyFunction()
-
-local a, b, c, d, e, f = emptyFunction(), emptyFunction(function() return true end)
-
-local a, b, c, d, e, f = emptyFunction(function() return true end)
-
-local function object()
-  local self = {}
-
-  function self:test()
-  end
-
-  self.test = function()
-  end
-
-  self.test = function()
-    -- Reaaaaally long comment, goes on forever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever
-  end
-
-  return self
-end
-
 print('OK')
 
 return res
