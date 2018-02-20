@@ -10,7 +10,7 @@ export interface Options {
     lineWidth: number;
     indentCount: number;
     useTabs: boolean;
-    formatMultipleAssignments: boolean;
+    linebreakMultipleAssignments: boolean;
     quotemark: Quotemark;
     writeMode: WriteMode;
 }
@@ -22,7 +22,7 @@ export const defaultOptions: Options = {
     lineWidth: 120,
     indentCount: 4,
     useTabs: false,
-    formatMultipleAssignments: false,
+    linebreakMultipleAssignments: false,
     quotemark: 'double',
     writeMode: WriteMode.StdOut
 };
