@@ -198,7 +198,7 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                     left.push('local ');
                 }
 
-                const linelength = node.range["1"] - node.range["0"];
+                const linelength = node.range['1'] - node.range['0'];
                 const shouldBreak = options.linebreakMultipleAssignments || linelength > options.lineWidth;
 
                 left.push(
