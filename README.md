@@ -25,6 +25,13 @@ Format a stream from `stdin`:
 ## TODO
 - [ ] Add support for a `.luafmt` preferences file
 
+## Testing
+`lua-fmt` uses [jest](https://facebook.github.io/jest/) for automated testing.
+
+Among the user-created tests in the `test/` folder, a copy of the `lua-5.3.4` tests are executed after formatting to ensure the code remains syntactically correct after formatting. For this reason, please do not modify the `lua-5.3.4-tests` folder unless updating with new tests from the official Lua tests. To run these tests, `lua53` is expected to be available on the `PATH`.
+
+When contributing changes, please consider writing tests to ensure they do not regress.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
