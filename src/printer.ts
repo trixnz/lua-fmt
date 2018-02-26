@@ -213,9 +213,19 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                 if (node.init.length) {
                     operator = ' =';
 
-                    right.push(
-                        join(concat([',', line]), path.map(print, 'init'))
-                    );
+                    if (node.init.length > 1) {
+                        right.push(
+                            indent(
+                                join(
+                                    concat([',', line]), path.map(print, 'init')
+                                )
+                            )
+                        );
+                    } else {
+                        right.push(
+                            join(concat([',', line]), path.map(print, 'init'))
+                        );
+                    }
                 }
 
                 // HACK: This definitely needs to be improved, as I'm sure TableConstructorExpression isn't the only
@@ -226,7 +236,11 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                 // This results in the table's initial { character being moved to a separate line.
                 //
                 // There's probably a much better way of doing this, but it works for now.
-                const canBreakLine = node.init.some(n => n != null && n.type !== 'TableConstructorExpression');
+                const canBreakLine = node.init.some(n =>
+                    n != null &&
+                    n.type !== 'TableConstructorExpression' &&
+                    n.type !== 'FunctionDeclaration'
+                );
 
                 return group(
                     concat([

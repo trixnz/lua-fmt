@@ -62,7 +62,7 @@ export interface SearchOptions {
     searchBackwards?: boolean;
 };
 
-export function skipOnce(text: string, idx: number, sequences: [string], searchOptions: SearchOptions = {}) {
+export function skipOnce(text: string, idx: number, sequences: string[], searchOptions: SearchOptions = {}) {
     let skipCount = 0;
     sequences.forEach(seq => {
         const searchText = searchOptions.searchBackwards
@@ -78,7 +78,7 @@ export function skipOnce(text: string, idx: number, sequences: [string], searchO
     return idx + (searchOptions.searchBackwards ? -skipCount : skipCount);
 }
 
-export function skipMany(text: string, idx: number, sequences: [string], searchOptions: SearchOptions = {}) {
+export function skipMany(text: string, idx: number, sequences: string[], searchOptions: SearchOptions = {}) {
     let oldIdx = null;
 
     while (oldIdx !== idx) {
