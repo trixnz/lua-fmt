@@ -28,12 +28,7 @@ local a, b, c, d, e, f = emptyFunction(), emptyFunction()
 
 local a, b, c, d, e, f = emptyFunction(), emptyFunction(), emptyFunction()
 
-local a,
-    b,
-    c,
-    d,
-    e,
-    f =
+local a, b, c, d, e, f =
     emptyFunction(),
     emptyFunction(
         function()
@@ -41,12 +36,7 @@ local a,
         end
     )
 
-local a,
-    b,
-    c,
-    d,
-    e,
-    f =
+local a, b, c, d, e, f =
     emptyFunction(
     function()
         return true
