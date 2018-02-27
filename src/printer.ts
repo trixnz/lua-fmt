@@ -198,15 +198,14 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                     left.push('local ');
                 }
 
-                const linelength = node.range['1'] - node.range['0'];
-                const shouldBreak = options.linebreakMultipleAssignments || linelength > options.lineWidth;
+                const shouldBreak = options.linebreakMultipleAssignments;
 
                 left.push(
                     indent(
                         join(
                             concat([
                                 ',',
-                                shouldBreak ? line : ' '
+                                shouldBreak ? hardline : line
                             ]),
                             path.map(print, 'variables')
                         )
@@ -250,7 +249,7 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
 
                 return group(
                     concat([
-                        concat(left),
+                        group(concat(left)),
                         group(
                             concat([
                                 operator,
