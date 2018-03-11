@@ -26,6 +26,10 @@ export function runLuaCode(code: string): Promise<boolean> {
                 resolve(true);
             }
         });
+
+        process.on('error', err => {
+            reject(err);
+        });
     });
 }
 
