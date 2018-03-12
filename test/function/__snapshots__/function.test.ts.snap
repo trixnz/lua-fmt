@@ -42,8 +42,7 @@ end
 
 local ok, err = pcall(foo)
 
-local ok, err =
-    pcall(
+local ok, err = pcall(
     function()
     end
 )
