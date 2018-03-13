@@ -24,3 +24,7 @@ end
 local ok, err = pcall(foo)
 
 local ok, err = pcall(function() end)
+
+local result = test({1, 2, 3}, function(value) return 1 % 2 == 0 end)
+
+local result = test({1, 2, 3}, "helloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo", 'hi', true, nil, function(value) return 1 % 2 == 0 end)
