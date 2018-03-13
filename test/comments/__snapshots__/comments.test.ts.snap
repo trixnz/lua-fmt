@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`concat.lua 1`] = `
+"local items =
+    \\"Vogon \\" .. -- Oh no!
+    \\"towel \\" .. -- Give you super powers.
+    \\"guide \\" .. -- Ultimate Wikipedia.
+    \\"robot \\" .. -- He's depressed.
+    \\"\\"
+print(items)
+"
+`;
+
 exports[`do.lua 1`] = `
 "do -- Dangling Begin DoStatement
 end -- Dangling End DoStatement
