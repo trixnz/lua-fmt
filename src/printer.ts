@@ -491,7 +491,6 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
             // fitting combination of argument layout. I.e: If all arguments but the last fit on the same line, and the
             // last argument is a table, it would be beneficial to break on the table, rather than breaking the entire
             // argument list.
-            // let shouldBreakExpression = hasNewLineInRange(options.sourceText, node.range[0], node.range[1]);
 
             const callExpressionSpacing = options.inlineFunctionCalls ?
             [

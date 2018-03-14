@@ -11,17 +11,11 @@ end
 local a,
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,
     c = foo()
-print(
-    a,
-    bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,
-    c
-)
+print(a, bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb, c)
 
 local a,
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc = foo(
-
-)
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc = foo()
 
 local a, b, c, d, e, f = emptyFunction()
 
@@ -30,17 +24,13 @@ local a, b, c, d, e, f = emptyFunction(), emptyFunction()
 local a, b, c, d, e, f = emptyFunction(), emptyFunction(), emptyFunction()
 
 local a, b, c, d, e, f = emptyFunction(),
-    emptyFunction(
-        function()
-            return true
-        end
-    )
-
-local a, b, c, d, e, f = emptyFunction(
-    function()
+    emptyFunction(function()
         return true
-    end
-)
+    end)
+
+local a, b, c, d, e, f = emptyFunction(function()
+    return true
+end)
 
 local function object()
     local self = {}
