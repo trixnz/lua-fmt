@@ -244,7 +244,8 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                 const canBreakLine = node.init.some(n =>
                     n != null &&
                     n.type !== 'TableConstructorExpression' &&
-                    n.type !== 'FunctionDeclaration'
+                    n.type !== 'FunctionDeclaration' &&
+                    n.type !== 'CallExpression'
                 );
 
                 return group(
@@ -491,17 +492,25 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
             // last argument is a table, it would be beneficial to break on the table, rather than breaking the entire
             // argument list.
 
+            const callExpressionSpacing = options.inlineFunctionCalls ?
+            [
+                '(',
+                    concat([join(concat([',', ' ']), printedCallExpressionArgs)]),
+                ')'
+            ] :
+            [
+                '(',
+                indent(
+                    concat([softline, join(concat([',', line]), printedCallExpressionArgs)])
+                ),
+                softline,
+                ')'
+            ];
+
             return concat([
                 path.call(print, 'base'),
                 group(
-                    concat([
-                        '(',
-                        indent(
-                            concat([softline, join(concat([',', line]), printedCallExpressionArgs)])
-                        ),
-                        softline,
-                        ')'
-                    ]),
+                    concat(callExpressionSpacing),
                     printedCallExpressionArgs.some(willBreak)
                 )
             ]);

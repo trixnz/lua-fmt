@@ -11,6 +11,7 @@ export interface Options {
     indentCount: number;
     useTabs: boolean;
     linebreakMultipleAssignments: boolean;
+    inlineFunctionCalls: boolean;
     quotemark: Quotemark;
     writeMode: WriteMode;
 }
@@ -23,6 +24,7 @@ export const defaultOptions: Options = {
     indentCount: 4,
     useTabs: false,
     linebreakMultipleAssignments: false,
+    inlineFunctionCalls: true,
     quotemark: 'double',
     writeMode: WriteMode.StdOut
 };
