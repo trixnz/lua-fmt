@@ -7,7 +7,7 @@ import * as getStdin from 'get-stdin';
 import { readFileSync, writeFileSync } from 'fs';
 
 import { formatText, producePatch } from '../src/index';
-import { UserOptions, defaultOptions, WriteMode } from '../src/options';
+import { UserOptions, defaultOptions, WriteMode, Quotemark } from '../src/options';
 
 function myParseInt(inputString: string, defaultValue: number) {
     const int = parseInt(inputString, 10);
@@ -25,6 +25,10 @@ function parseWriteMode(inputString: string, defaultValue: WriteMode) {
     }
 
     return defaultValue;
+}
+
+function parseQuotemark(inputString: Quotemark, defaultValue: Quotemark): Quotemark {
+    return inputString === 'single' || inputString === 'double' ? inputString : defaultValue;
 }
 
 function printFormattedDocument(filename: string, originalDocument: string, formattedDocument: string,
@@ -59,8 +63,9 @@ program
     .option('-l, --line-width <width>', 'Maximum length of a line before it will be wrapped',
     myParseInt, defaultOptions.lineWidth)
     .option('-i, --indent-count <count>', 'Number of characters to indent', myParseInt, defaultOptions.indentCount)
+    .option('-q, --quotemark <double|single>', 'Use double or single quotes', parseQuotemark, defaultOptions.quotemark)
     .option('--use-tabs', 'Use tabs instead of spaces for indentation')
-    .option('-w, --write-mode <mode>', 'Mode for output', parseWriteMode, defaultOptions.writeMode);
+    .option('-w, --write-mode <stdout|replace|diff>', 'Mode for output', parseWriteMode, defaultOptions.writeMode);
 
 program.parse(process.argv);
 
@@ -77,6 +82,7 @@ function printError(filename: string, err: Error) {
 const customOptions: UserOptions = {
     lineWidth: program.lineWidth,
     indentCount: program.indentCount,
+    quotemark: program.quotemark,
     useTabs: program.useTabs,
     writeMode: program.writeMode
 };
