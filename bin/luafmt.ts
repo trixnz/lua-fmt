@@ -79,7 +79,7 @@ function printError(filename: string, err: Error) {
 
 function exitWithCorrectExitCode(filename: string, originalDocument: string, formattedDocument: string,
     options: UserOptions) {
-    if (originalDocument !== formattedDocument && options.listDifferent) {
+    if (options.listDifferent && originalDocument !== formattedDocument) {
         console.error(`Change needed when formatting ${filename}`);
         process.exit(65);
     }
