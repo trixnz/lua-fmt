@@ -26,7 +26,7 @@ Format a stream from `stdin`:
 - [ ] Add support for a `.luafmt` preferences file
 
 ## Testing
-`lua-fmt` uses [jest](https://facebook.github.io/jest/) for automated testing.
+`lua-fmt` uses [jest](https://facebook.github.io/jest/) for automated testing (`gulp test`).
 
 Among the user-created tests in the `test/` folder, a copy of the `lua-5.3.4` tests are executed after formatting to ensure the code remains syntactically correct after formatting. For this reason, please do not modify the `lua-5.3.4-tests` folder unless updating with new tests from the official Lua tests. To run these tests, `lua53` is expected to be available on the `PATH`.
 
