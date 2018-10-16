@@ -57,10 +57,12 @@ program
     .usage('[options] [file]')
     .option('--stdin', 'Read code from stdin')
     .option('-l, --line-width <width>', 'Maximum length of a line before it will be wrapped',
-    myParseInt, defaultOptions.lineWidth)
+        myParseInt, defaultOptions.lineWidth)
     .option('-i, --indent-count <count>', 'Number of characters to indent', myParseInt, defaultOptions.indentCount)
     .option('--use-tabs', 'Use tabs instead of spaces for indentation')
-    .option('-w, --write-mode <mode>', 'Mode for output', parseWriteMode, defaultOptions.writeMode);
+    .option('-w, --write-mode <mode>', 'Mode for output', parseWriteMode, defaultOptions.writeMode)
+    .option('-l, --list-different', 'Print if files are different from desired formatting.'
+        + 'If there are differences the script errors out, which is useful in a CI scenario.');
 
 program.parse(process.argv);
 
@@ -74,16 +76,30 @@ function printError(filename: string, err: Error) {
     }
 }
 
+
+function exitWithCorrectExitCode(filename: string, originalDocument: string, formattedDocument: string,
+    options: UserOptions) {
+    if (options.listDifferent && originalDocument !== formattedDocument) {
+        console.error(`Change needed when formatting ${filename}`);
+        process.exit(65);
+    }
+    process.exit(0);
+}
+
 const customOptions: UserOptions = {
     lineWidth: program.lineWidth,
     indentCount: program.indentCount,
     useTabs: program.useTabs,
-    writeMode: program.writeMode
+    writeMode: program.writeMode,
+    listDifferent: program.listDifferent
 };
 
 if (program.stdin) {
     getStdin().then(input => {
-        printFormattedDocument('<stdin>', input, formatText(input, customOptions), customOptions);
+        const formatted = formatText(input, customOptions);
+
+        printFormattedDocument('<stdin>', input, formatted, customOptions);
+        exitWithCorrectExitCode('<stdin>', input, formatted, customOptions);
     }).catch((err: Error) => {
         printError('<stdin>', err);
     });
@@ -107,6 +123,7 @@ if (program.stdin) {
         const formatted = formatText(input, customOptions);
 
         printFormattedDocument(filename, input, formatted, customOptions);
+        exitWithCorrectExitCode(filename, input, formatted, customOptions);
     } catch (err) {
         printError(filename, err);
     }

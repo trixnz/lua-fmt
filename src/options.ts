@@ -13,6 +13,7 @@ export interface Options {
     linebreakMultipleAssignments: boolean;
     quotemark: Quotemark;
     writeMode: WriteMode;
+    listDifferent: boolean;
 }
 
 export type UserOptions = Partial<Options>;
@@ -24,7 +25,8 @@ export const defaultOptions: Options = {
     useTabs: false,
     linebreakMultipleAssignments: false,
     quotemark: 'double',
-    writeMode: WriteMode.StdOut
+    writeMode: WriteMode.StdOut,
+    listDifferent: false
 };
 
 /** Returns the quotation mark to use from the provided option. */
