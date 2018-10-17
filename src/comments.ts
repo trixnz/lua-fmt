@@ -1,10 +1,10 @@
-import { FastPath } from './fastPath';
-import { Doc, concat, indent, join, hardline, lineSuffix, breakParent } from './docBuilder';
-import { PrintFn } from './printer';
-import { locStart, locEnd, isNextLineEmpty, hasNewLine, isPreviousLineEmpty } from './util';
-import { Options } from './options';
+import * as luaparse from "luaparse";
 
-import * as luaparse from 'luaparse';
+import { breakParent, concat, Doc, hardline, indent, join, lineSuffix } from "./docBuilder";
+import { FastPath } from "./fastPath";
+import { Options } from "./options";
+import { PrintFn } from "./printer";
+import { hasNewLine, isNextLineEmpty, isPreviousLineEmpty, locEnd, locStart } from "./util";
 
 enum CommentType {
     Leading,
@@ -375,7 +375,7 @@ function handleIfStatementsWithNoBodyComments(precedingNode: luaparse.Node,
         return true;
     }
 
-    if (precedingNode && precedingNode.type === 'ElseClause') {
+    if (precedingNode && (precedingNode.type === 'ElseClause' || precedingNode.type == 'IfClause')) {
         addDanglingComment(precedingNode, comment);
         return true;
     }
