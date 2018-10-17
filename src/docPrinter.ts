@@ -142,12 +142,10 @@ function printDocToStringWithState(doc: Doc, state: State) {
                 break;
 
             case 'indent':
-                {
-                    state.indentation++;
-                    printDocToStringWithState(doc.content, state);
-                    state.indentation--;
-                    break;
-                }
+                state.indentation++;
+                printDocToStringWithState(doc.content, state);
+                state.indentation--;
+                break;
 
             case 'lineSuffix':
                 state.lineSuffixes.push(doc);
