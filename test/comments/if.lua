@@ -21,3 +21,7 @@ else -- dangling ElseClause
   -- body ElseClause
 end -- dangling End IfStatement
 -- trailing IfStatement
+
+if 1 then
+  -- body IfClause
+end

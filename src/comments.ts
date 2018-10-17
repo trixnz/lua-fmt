@@ -375,7 +375,7 @@ function handleIfStatementsWithNoBodyComments(precedingNode: luaparse.Node,
         return true;
     }
 
-    if (precedingNode && precedingNode.type === 'ElseClause') {
+    if (precedingNode && (precedingNode.type === 'ElseClause' || precedingNode.type === 'IfClause')) {
         addDanglingComment(precedingNode, comment);
         return true;
     }
