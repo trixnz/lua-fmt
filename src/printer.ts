@@ -244,7 +244,8 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                 const canBreakLine = node.init.some(n =>
                     n != null &&
                     n.type !== 'TableConstructorExpression' &&
-                    n.type !== 'FunctionDeclaration'
+                    n.type !== 'FunctionDeclaration' &&
+                    n.type !== 'CallExpression'
                 );
 
                 return group(
