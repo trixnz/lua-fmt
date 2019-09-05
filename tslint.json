@@ -60,7 +60,6 @@
         "no-trailing-whitespace": true,
         "no-unsafe-finally": true,
         "no-unused-expression": true,
-        "no-unused-new": true,
         "no-var-keyword": true,
 
         "object-literal-key-quotes": [
