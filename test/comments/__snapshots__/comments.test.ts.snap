@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`do.lua 1`] = `
+exports[`comments: do.lua 1`] = `
 "do -- Dangling Begin DoStatement
 end -- Dangling End DoStatement
 
@@ -17,7 +17,7 @@ end -- Dangling End DoStatement
 "
 `;
 
-exports[`for.lua 1`] = `
+exports[`comments: for.lua 1`] = `
 "for i = 0, 1, 2 do -- dangling Begin ForNumericStatement
 end -- Dangling End ForNumericStatement
 
@@ -48,7 +48,7 @@ end -- Dangling End ForNumericStatement
 "
 `;
 
-exports[`function.lua 1`] = `
+exports[`comments: function.lua 1`] = `
 "function test() -- dangling Begin FunctionDeclaration
 end -- dangling FunctionDeclaration
 
@@ -77,7 +77,7 @@ end -- dangling FunctionDeclaration
 "
 `;
 
-exports[`if.lua 1`] = `
+exports[`comments: if.lua 1`] = `
 "if 1 then -- dangling IfClause
 elseif 1 then -- dangling ElseIfClause
 else -- dangling ElseClause
@@ -104,7 +104,7 @@ end -- dangling End IfStatement
 "
 `;
 
-exports[`repeat.lua 1`] = `
+exports[`comments: repeat.lua 1`] = `
 "repeat -- Dangling Begin RepeatStatement
 until true -- Dangling End RepeatStatement
 
@@ -121,7 +121,7 @@ until true -- Dangling End RepeatStatement
 "
 `;
 
-exports[`table.lua 1`] = `
+exports[`comments: table.lua 1`] = `
 "-- Simple example
 a = {
     b = true

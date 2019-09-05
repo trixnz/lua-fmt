@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`keep_quotemark.lua 1`] = `
+exports[`quotes: keep_quotemark.lua 1`] = `
 "-- Typical case with {quotemark: 'single' }
 print('this will be converted to single quotes')
 

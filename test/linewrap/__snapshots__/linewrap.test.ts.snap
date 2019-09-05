@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`assignment.lua 1`] = `
+exports[`linewrap: assignment.lua 1`] = `
 "bbbbbbbbbbbbbbbbbbbbbbb = true
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa =
     bbbbbbbbbbbbbbbbbbbbbbb
