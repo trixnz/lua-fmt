@@ -60,7 +60,7 @@ export function isNode(value: any) {
 
 export interface SearchOptions {
     searchBackwards?: boolean;
-};
+}
 
 export function skipOnce(text: string, idx: number, sequences: string[], searchOptions: SearchOptions = {}) {
     let skipCount = 0;
