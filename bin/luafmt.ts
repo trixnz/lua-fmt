@@ -4,10 +4,15 @@ const pkg = require('../../package.json');
 
 import * as program from 'commander';
 import * as getStdin from 'get-stdin';
-import { readFileSync, writeFileSync } from 'fs';
+import * as globby from 'globby';
+import { promisify } from 'util';
+import { readFile, writeFile } from 'fs';
 
 import { formatText, producePatch } from '../src/index';
 import { UserOptions, defaultOptions, WriteMode } from '../src/options';
+
+const readFileAsync = promisify(readFile);
+const writeFileAsync = promisify(writeFile);
 
 function myParseInt(inputString: string, defaultValue: number) {
     const int = parseInt(inputString, 10);
@@ -32,29 +37,27 @@ function printFormattedDocument(filename: string, originalDocument: string, form
     switch (options.writeMode) {
         case 'stdout':
             process.stdout.write(formattedDocument);
-            break;
+            return Promise.resolve();
 
         case 'diff':
             process.stdout.write(producePatch(filename, originalDocument, formattedDocument));
-            break;
+            return Promise.resolve();
 
         case 'replace':
             if (filename === '<stdin>') {
-                printError(filename, new Error('Write mode \'replace\' is incompatible with --stdin'));
+                throw new Error('Write mode \'replace\' is incompatible with --stdin');
             }
 
-            try {
-                writeFileSync(filename, formattedDocument);
-            } catch (err) {
-                printError(filename, err);
-            }
-            break;
+            return writeFileAsync(filename, formattedDocument);
+
+        default:
+            throw new Error(`Invalid write mode \'${options.writeMode}\'`);
     }
 }
 
 program
     .version(pkg.version)
-    .usage('[options] [file]')
+    .usage('[options] [file|pattern ...]')
     .option('--stdin', 'Read code from stdin')
     .option('-l, --line-width <width>', 'Maximum length of a line before it will be wrapped',
     myParseInt, defaultOptions.lineWidth)
@@ -82,32 +85,39 @@ const customOptions: UserOptions = {
 };
 
 if (program.stdin) {
-    getStdin().then(input => {
-        printFormattedDocument('<stdin>', input, formatText(input, customOptions), customOptions);
-    }).catch((err: Error) => {
-        printError('<stdin>', err);
-    });
-} else {
-    if (program.args.length === 0) {
-        console.error('Expected <file.lua>');
-        program.outputHelp();
-        process.exit(1);
-    }
-
-    const filename = program.args[0];
-    let input = '';
-
-    try {
-        input = readFileSync(filename).toString();
-    } catch (err) {
-        printError(filename, err);
-    }
-
-    try {
-        const formatted = formatText(input, customOptions);
-
-        printFormattedDocument(filename, input, formatted, customOptions);
-    } catch (err) {
-        printError(filename, err);
-    }
+    getStdin()
+        .then((input: string) => {
+            return printFormattedDocument('<stdin>', input, formatText(input, customOptions), customOptions);
+        })
+        .then(() => {
+            process.exit(0);
+        })
+        .catch((err: Error) => {
+            printError('<stdin>', err);
+        });
 }
+
+if (program.args.length === 0) {
+    console.error('Expected <file.lua>');
+    program.outputHelp();
+    process.exit(1);
+}
+
+function formatFile(filename: string) {
+    return readFileAsync(filename, 'utf-8')
+        .then((input: string) => {
+            const formatted = formatText(input, customOptions);
+            return printFormattedDocument(filename, input, formatted, customOptions);
+        })
+        .catch((err: Error) => {
+            throw { filename, err };
+        });
+}
+
+globby(program.args, { dot: true, onlyFiles: true })
+    .then((filenames: string[]) => {
+        return Promise.all(filenames.map(formatFile));
+    })
+    .catch((reason: { filename: string, err: Error }) => {
+        printError(reason.filename, reason.err);
+    });
