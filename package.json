@@ -78,6 +78,7 @@
     "@types/commander": "^2.3.31",
     "@types/diff": "^3.2.0",
     "@types/get-stdin": "^5.0.0",
+    "chalk": "^2.4.2",
     "commander": "^2.9.0",
     "diff": "^3.3.0",
     "get-stdin": "^5.0.1",
