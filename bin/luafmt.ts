@@ -5,6 +5,7 @@ const pkg = require('../../package.json');
 import * as program from 'commander';
 import * as getStdin from 'get-stdin';
 import * as globby from 'globby';
+import chalk from 'chalk';
 import { promisify } from 'util';
 import { readFile, writeFile } from 'fs';
 
@@ -48,7 +49,15 @@ function printFormattedDocument(filename: string, originalDocument: string, form
                 throw new Error('Write mode \'replace\' is incompatible with --stdin');
             }
 
-            return writeFileAsync(filename, formattedDocument);
+            if (originalDocument === formattedDocument) {
+              process.stdout.write(`${chalk.gray(filename)}\n`);
+              return Promise.resolve();
+            }
+
+            return writeFileAsync(filename, formattedDocument)
+              .then(() => {
+                process.stdout.write(`${chalk.white(filename)}\n`);
+              });
 
         default:
             throw new Error(`Invalid write mode \'${options.writeMode}\'`);
