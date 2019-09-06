@@ -29,7 +29,7 @@ function getChildrenOfNode(node: luaparse.Node): luaparse.Node[] {
 
             children.splice(idx + 1, 0, n);
         }
-    };
+    }
 
     for (const key of keys) {
         const val = node[key];

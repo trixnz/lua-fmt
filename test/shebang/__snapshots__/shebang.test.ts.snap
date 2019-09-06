@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`keep_shebang.lua 1`] = `
+exports[`shebang: keep_shebang.lua 1`] = `
 "#!/usr/bin/env lua
 
 print(\\"Hello, World\\")

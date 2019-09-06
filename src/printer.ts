@@ -190,76 +190,75 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
             return concat(parts);
 
         case 'LocalStatement':
-        case 'AssignmentStatement':
-            {
-                const left = [];
+        case 'AssignmentStatement': {
+            const left = [];
 
-                if (node.type === 'LocalStatement') {
-                    left.push('local ');
-                }
-
-                const shouldBreak = options.linebreakMultipleAssignments;
-
-                left.push(
-                    indent(
-                        join(
-                            concat([
-                                ',',
-                                shouldBreak ? hardline : line
-                            ]),
-                            path.map(print, 'variables')
-                        )
-                    )
-                );
-
-                let operator = '';
-
-                const right = [];
-                if (node.init.length) {
-                    operator = ' =';
-
-                    if (node.init.length > 1) {
-                        right.push(
-                            indent(
-                                join(
-                                    concat([',', line]), path.map(print, 'init')
-                                )
-                            )
-                        );
-                    } else {
-                        right.push(
-                            join(concat([',', line]), path.map(print, 'init'))
-                        );
-                    }
-                }
-
-                // HACK: This definitely needs to be improved, as I'm sure TableConstructorExpression isn't the only
-                // candidate that falls under this critera.
-                //
-                // Due to the nature of how groups break, if the TableConstructorExpression contains a newline (and
-                // thusly breaks), the break will propagate all the way up to the group on the left of the assignment.
-                // This results in the table's initial { character being moved to a separate line.
-                //
-                // There's probably a much better way of doing this, but it works for now.
-                const canBreakLine = node.init.some(n =>
-                    n != null &&
-                    n.type !== 'TableConstructorExpression' &&
-                    n.type !== 'FunctionDeclaration'
-                );
-
-                return group(
-                    concat([
-                        group(concat(left)),
-                        group(
-                            concat([
-                                operator,
-                                canBreakLine ? indent(line) : ' ',
-                                concat(right)
-                            ])
-                        )
-                    ])
-                );
+            if (node.type === 'LocalStatement') {
+                left.push('local ');
             }
+
+            const shouldBreak = options.linebreakMultipleAssignments;
+
+            left.push(
+                indent(
+                    join(
+                        concat([
+                            ',',
+                            shouldBreak ? hardline : line
+                        ]),
+                        path.map(print, 'variables')
+                    )
+                )
+            );
+
+            let operator = '';
+
+            const right = [];
+            if (node.init.length) {
+                operator = ' =';
+
+                if (node.init.length > 1) {
+                    right.push(
+                        indent(
+                            join(
+                                concat([',', line]), path.map(print, 'init')
+                            )
+                        )
+                    );
+                } else {
+                    right.push(
+                        join(concat([',', line]), path.map(print, 'init'))
+                    );
+                }
+            }
+
+            // HACK: This definitely needs to be improved, as I'm sure TableConstructorExpression isn't the only
+            // candidate that falls under this critera.
+            //
+            // Due to the nature of how groups break, if the TableConstructorExpression contains a newline (and
+            // thusly breaks), the break will propagate all the way up to the group on the left of the assignment.
+            // This results in the table's initial { character being moved to a separate line.
+            //
+            // There's probably a much better way of doing this, but it works for now.
+            const canBreakLine = node.init.some(n =>
+                n != null &&
+                n.type !== 'TableConstructorExpression' &&
+                n.type !== 'FunctionDeclaration'
+            );
+
+            return group(
+                concat([
+                    group(concat(left)),
+                    group(
+                        concat([
+                            operator,
+                            canBreakLine ? indent(line) : ' ',
+                            concat(right)
+                        ])
+                    )
+                ])
+            );
+        }
 
         case 'CallStatement':
             return path.call(print, 'expression');
@@ -431,7 +430,7 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
 
         // Expressions
         case 'BinaryExpression':
-        case 'LogicalExpression':
+        case 'LogicalExpression': {
             const parent = path.getParent() as luaparse.Node;
             const shouldGroup = parent.type !== node.type &&
                 node.left.type !== node.type &&
@@ -451,6 +450,7 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                     ]))
                 ])
             );
+        }
 
         case 'UnaryExpression':
             parts.push(node.operator);
@@ -520,7 +520,7 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
 
             return concat(parts);
 
-        case 'TableConstructorExpression':
+        case 'TableConstructorExpression': {
             if (node.fields.length === 0) {
                 return '{}';
             }
@@ -549,6 +549,7 @@ function printNodeNoParens(path: FastPath, options: Options, print: PrintFn) {
                 ]),
                 shouldBreak
             );
+        }
 
         case 'TableKeyString':
             return concat([

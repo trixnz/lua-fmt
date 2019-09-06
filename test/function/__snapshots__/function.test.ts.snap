@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`functions.lua 1`] = `
+exports[`function: functions.lua 1`] = `
 "function test()
 end
 function test(arg)

@@ -4,7 +4,7 @@ import { Options } from './options';
 enum Mode {
     Flat,
     Break
-};
+}
 
 interface State {
     options: Options;
@@ -141,13 +141,12 @@ function printDocToStringWithState(doc: Doc, state: State) {
                 state.currentLineLength = renderedIndentation.length;
                 break;
 
-            case 'indent':
-                {
-                    state.indentation++;
-                    printDocToStringWithState(doc.content, state);
-                    state.indentation--;
-                    break;
-                }
+            case 'indent': {
+                state.indentation++;
+                printDocToStringWithState(doc.content, state);
+                state.indentation--;
+                break;
+            }
 
             case 'lineSuffix':
                 state.lineSuffixes.push(doc);
